@@ -1,5 +1,6 @@
 /*
  * a tiny expression evaluator
+ * Copyright (C) 2014  Yu-Jie Lin
  * Copyright (C) 2001  Dimitromanolakis Apostolos
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -23,27 +24,72 @@
 #include <string.h>
 #include <math.h>
 
+#ifdef BASH_LOADABLE
+#include <builtins.h>
+#include <shell.h>
+#include <variables.h>
+#include <bashgetopt.h>
+#endif
+
+#define NAME    "e"
+#define USAGE   NAME " [-v VARNAME] [expression]"
+
+
+#ifndef BASH_LOADABLE
+#define FMTPNT(...) printf(__VA_ARGS__)
+#define FORMAT(s)   format(s)
+#else
+#define FMTPNT(...) sprintf(result + strlen(result), __VA_ARGS__)
+#define FORMAT(s)   format(s, varname)
+#endif
+
+
 // copied from math.h
 # define M_PI           3.14159265358979323846  /* pi */
 # define M_E            2.7182818284590452354   /* e */
+
 
 typedef double type;
 
 char  c;
 char *p;
 
+#ifndef BASH_LOADABLE
 int    argc;
 int    arg;
 char **argv;
+#else
+WORD_LIST *BEGIN;
+WORD_LIST *list;
+#endif
 
 
 type E();
+/* For unknown reason, in Bash loadable with -O > 0:
+ *
+ * Running: e -- -1
+ * Returns: -nan
+ *
+ * Even disabling all these optizmizers:
+ *
+ *   diff -y <(gcc -c -Q -O0 --help=optimizers) <(gcc -c -Q -O1 --help=optimizers) | grep '|'
+ *
+ * It doesn't help, only the following would get the correct answer.
+ */
+#ifdef BASH_LOADABLE
+#pragma GCC push_options
+#pragma GCC optimize ("O0")
+#endif
 type term();
+#ifdef BASH_LOADABLE
+#pragma GCC pop_options
+#endif
 
 
 void
 next ()
 {
+#ifndef BASH_LOADABLE
   do {
     if (arg != argc && !*p)
       p = argv[++arg];
@@ -53,6 +99,19 @@ next ()
     else
       c = 0;
   } while (c == ' ');
+#else
+  do {
+    if (list->next && !*p) {
+      list = list->next;
+      p = list->word->word;
+    }
+
+    if (list)
+      c = *p++;
+    else
+      c = 0;
+  } while (c == ' ');
+#endif
 }
 
 
@@ -61,18 +120,32 @@ syntax ()
 {
   int tc;
   int c = -1;
+#ifndef BASH_LOADABLE
   int g =  1;
   char *t = argv[g];
+#else
+  WORD_LIST *list = BEGIN;
+  char *t = list->word->word;
+#endif
 
   while (true) {
     if (t == p)
       tc = c;
     c++;
 
+#ifndef BASH_LOADABLE
     if (g != argc && !*t)
       t = argv[++g];
 
     if (g != argc)
+#else
+    if (list->next && !*t) {
+      list = list->next;
+      t = list->word->word;
+    }
+
+    if (list)
+#endif
       putchar(*t++);
     else
       break;
@@ -315,15 +388,24 @@ S ()
 
 
 void
+#ifndef BASH_LOADABLE
 format (type X)
+#else
+format (type X, char *varname)
+#endif
 {
   type i;
   type f;
   int d;
+#ifdef BASH_LOADABLE
+  char result[2000] = "";
+#endif
 
   if (!isfinite(X)) {
-    printf("%f", X);
-    return;
+    FMTPNT("%f", X);
+#ifdef BASH_LOADABLE
+    goto out;
+#endif
   }
 
   f = fabs(modf(X, &i));
@@ -347,28 +429,84 @@ format (type X)
 
     // decimal part has been rounded
     if (s[0] == '1')
-      printf("%.0f", i + (X >= 0 ? 1 : -1));
+      FMTPNT("%.0f", i + (X >= 0 ? 1 : -1));
     else {
-      printf("%.0f", i);
+      FMTPNT("%.0f", i);
       if (s[2] != 0)
-        printf("%s", s + 1);
+        FMTPNT("%s", s + 1);
     }
   } else
-    printf("%.0f", i);
+    FMTPNT("%.0f", i);
+
+#ifdef BASH_LOADABLE
+out:
+  if (varname)
+    bind_variable(varname, result, 0);
+  else
+    printf("%s\n", result);
+#endif
 }
 
 
 int
+#ifndef BASH_LOADABLE
 main (int _argc, char **_argv)
+#else
+e_builtin (WORD_LIST *_list)
+#endif
 {
+#ifndef BASH_LOADABLE
   argc = _argc;
   argv = _argv;
   arg = 1;
   p = argv[arg];
+#else
+  int opt;
+  char *varname = NULL;
+
+  reset_internal_getopt();
+  while ((opt = internal_getopt(_list, "v:")) != -1) {
+    switch (opt) {
+    case 'v':
+      varname = malloc(strlen(list_optarg) + 1);
+      strcpy(varname, list_optarg);
+      break;
+    default:
+      return EX_USAGE;
+    }
+  }
+  BEGIN = list = loptend;
+  p = list->word->word;
+#endif
 
   next();
-  format(S());
+  FORMAT(S());
+
+#ifndef BASH_LOADABLE
   printf("\n");
 
   return EXIT_SUCCESS;
+#else
+  free(varname);
+
+  return EXECUTION_SUCCESS;
+#endif
 }
+
+
+#ifdef BASH_LOADABLE
+char *e_doc[] = {
+  "Tiny expression evaluator.",
+  (char *) NULL
+};
+
+
+struct builtin e_struct = {
+  "e",
+  e_builtin,
+  BUILTIN_ENABLED,
+  e_doc,
+  USAGE,
+  0
+};
+#endif

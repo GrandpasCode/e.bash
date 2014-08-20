@@ -1,11 +1,43 @@
 2014-08-20  Yu-Jie Lin	<livibetter@gmail.com>
+[FILES]
+	* remove: e
+	* add: AUTHORS
+	* add: benchmark.sh
+	* add: check.sh
+	* add: example/sine.sh
+	* add: example/sine.bc.sh
+	* reanme: makefile to Makefile
+	* rename: GPL to COPYING
+
+[Makefile]
+	* use implicit rule
+	* set CFLAGS: -std=c99 -g -O2
+	* add .PHONY
+	* add all target
+	* add benchmark target
+	* add check target
+	* add clean target
+	* add e.bash target: CFLAGS uses -std=gnu99
+	* add e2718 target
+
+[benchmark.sh]
+	* benchmark original e program
+	* benchmark e program
+	* benchmark Bash loadable with Command Substitution
+	* benchmark Bash loadable with Variable Binding
+
+[check.sh]
+	* test original e, e, and loadable
+
+[e.c]
 	* change coding style
-	* rename GPL to COPYING
-	* rename makefile to Makefile
-	* e: removed
-	* AUTHORS: added
-	* e.c: remove Vi modeline, add proper copyright comment, fix implicit
-	  declaration of function, use C99 boolean and isfinite, use
-	  EXIT_SUCCESS and EXIT_FAILURE
-	* Makefile: use implicit rule, add .PHONY, add all and clean targets,
-	  compile as C99
+	* make Bash loadable
+	* remove Vi modeline
+	* add proper copyright comment
+	* fix implicit declaration of function
+	* use C99 boolean and isfinite
+	* use EXIT_SUCCESS and EXIT_FAILURE
+	* main, format: allow variable binding via -v option in Bash loadable
+	* term: set GCC optimization on term function to -O0 to work around
+	  input [-- -1] resulting [-nan]
+
