@@ -1,4 +1,5 @@
 2014-08-20  Yu-Jie Lin	<livibetter@gmail.com>
+	* change coding style
 	* rename GPL to COPYING
 	* rename makefile to Makefile
 	* e: removed
