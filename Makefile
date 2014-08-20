@@ -4,7 +4,7 @@ e: e.c
 	gcc -O2 -s -o e e.c -lm
 
 VERSION = 0.02718
-DISTFILES = EXAMPLES GPL GRAMMAR README e e.c makefile
+DISTFILES = ChangeLog COPYING EXAMPLES GRAMMAR Makefile README e e.c
 
 dist: e
 	mkdir e-$(VERSION)
