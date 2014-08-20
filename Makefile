@@ -1,6 +1,8 @@
 #! make -f
 
 TARGETS = e
+
+CFLAGS  = -std=c99 -g -O2 -Wall -Wextra
 LDFLAGS = -lm
 
 VERSION = 0.02718

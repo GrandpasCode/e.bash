@@ -17,8 +17,15 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <math.h>
+
+// copied from math.h
+# define M_PI           3.14159265358979323846  /* pi */
+# define M_E            2.7182818284590452354   /* e */
 
 typedef double type;
 
@@ -57,7 +64,7 @@ syntax ()
   int g =  1;
   char *t = argv[g];
 
-  while (1) {
+  while (true) {
     if (t == p)
       tc = c;
     c++;
@@ -83,7 +90,7 @@ syntax ()
     printf("^--- syntax error\n");
   }
 
-  exit(1);
+  exit(EXIT_FAILURE);
 }
 
 
@@ -91,7 +98,7 @@ void
 unknown (char *s)
 {
   printf("'%s': unknown function\n", s);
-  exit(1);
+  exit(EXIT_FAILURE);
 }
 
 
@@ -258,7 +265,7 @@ F ()
 {
   type r = G();
 
-  while (1) {
+  while (true) {
     if (c == '*') {
       next(); r *= G();
     } else if (c == '/') {
@@ -280,7 +287,7 @@ E ()
 {
   type r = F();
 
-  while (1) {
+  while (true) {
     if (c == '+') {
       next();
       r += F();
@@ -314,7 +321,7 @@ format (type X)
   type f;
   int d;
 
-  if (!finite(X)) {
+  if (!isfinite(X)) {
     printf("%f", X);
     return;
   }
@@ -322,7 +329,7 @@ format (type X)
   f = fabs(modf(X, &i));
   d = floor(log10(fabs(X))) + 1;
 
-  if (finite(f) && f != 0) {
+  if (isfinite(f) && f != 0) {
     char *p;
     char s[2000];
     char t[2000];
@@ -363,5 +370,5 @@ main (int _argc, char **_argv)
   format(S());
   printf("\n");
 
-  return 0;
+  return EXIT_SUCCESS;
 }
