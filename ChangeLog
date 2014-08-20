@@ -4,3 +4,4 @@
 	* e: removed
 	* AUTHORS: added
 	* e.c: remove Vi modeline, add proper copyright comment
+	* Makefile: use implicit rule, add .PHONY, add all and clean targets
