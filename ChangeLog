@@ -2,3 +2,5 @@
 	* rename GPL to COPYING
 	* rename makefile to Makefile
 	* e: removed
+	* AUTHORS: added
+	* e.c: remove Vi modeline, add proper copyright comment
