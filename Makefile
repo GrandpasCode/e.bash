@@ -18,6 +18,13 @@
 
 SHELL = bash
 
+INSTALL = install
+INSTALL_PROGRAM = $(INSTALL) -D -m 755
+
+prefix  = /usr/local
+
+bindir  = $(prefix)/bin
+
 TARGETS = e e.bash
 
 E2718 = e-0.02718
@@ -58,6 +65,22 @@ $(E2718):
 .PHONY: benchmark check
 benchmark check: e2718 e e.bash
 	$(SHELL) $@.sh
+
+.PHONY: install
+install: $(TARGETS)
+	for bin in $^; do \
+	  $(INSTALL_PROGRAM) $$bin $(DESTDIR)$(bindir)/$$bin; \
+	done
+
+.PHONY: install-strip
+install-strip:
+	$(MAKE) INSTALL_PROGRAM='$(INSTALL_PROGRAM) -s' install
+
+.PHONY: uninstall
+uninstall: $(TARGETS)
+	for bin in $^; do \
+	  $(RM) -f $(DESTDIR)$(bindir)/$$bin; \
+	done
 
 .PHONY: clean
 clean:

@@ -31,6 +31,29 @@ Nevertheless, if you just want to say "Because I can," well, go ahead.
 Or just want to get ``1 + 1 = ?``, then either programs are fine to use.
 
 
+Installation
+============
+
+By default, it's installed to ``/usr/local`` and you will need to provide the
+path to Bash header files using ``BASH_INC``:
+
+.. code:: sh
+
+  $ make [prefix=PREFIX] BASH_INC=/path/to/bash/include [install|install-strip]
+
+You can change the installed location using ``prefix``. If everything compiles
+successfully, you should have two binary files:
+
+* ``e``: the command
+* ``e.bash``: the loadable
+
+Both are installed to ``prefix/bin``, although you can't directly execute
+``e.bash``, which is meant to be loaded by Bash, see Loadable_.
+
+If you need to strip, use ``install-strip`` target to install. To uninstall,
+with same ``prefix``, use ``uninstall`` target.
+
+
 Usage
 =====
 

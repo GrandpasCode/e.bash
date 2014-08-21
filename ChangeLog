@@ -7,6 +7,11 @@
 [AUTHORS]
 	* add: Yu-Jie Lin
 
+[Makefile]
+	* add install target: prefix for changing installed location
+	* add install-strip target
+	* add uninstall target
+
 2014-08-20  Yu-Jie Lin	<livibetter@gmail.com>
 [FILES]
 	* remove: e
