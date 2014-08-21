@@ -2,6 +2,14 @@
 NEWS for 0.1.0 (2014-08-21)
 ===========================
 
+Changes since 0.1.0 (2014-08-21)
+================================
+
+[examples]
+
+* add f.sh: plot Y = F(X)
+* add f-examples.sh: a set of examples of f.sh
+
 
 Changes since 0.02718 (2001-07-11)
 ==================================
