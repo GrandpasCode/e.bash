@@ -1,0 +1,26 @@
+===========================
+NEWS for 0.1.0 (2014-08-21)
+===========================
+
+
+Changes since 0.02718 (2001-07-11)
+==================================
+
+* compile as c99 for command and gnu99 for loadable
+* make e to be both command and Bash loadable
+* make possible to install and uninstall, and with prefix
+
+[loadable]
+
+* add -v to store result to the variable
+* add -V to display version string
+
+[examples]
+
+* add sine.sh and sine.bc.sh
+
+
+Changes since 0.0.0 (2001-07-11)
+================================
+
+* first public release
