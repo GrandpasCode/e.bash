@@ -31,6 +31,8 @@
 #include <bashgetopt.h>
 #endif
 
+#include "version.h"
+
 #define NAME    "e"
 #define USAGE   NAME " [-v VARNAME] [expression]"
 
@@ -465,8 +467,11 @@ e_builtin (WORD_LIST *_list)
   char *varname = NULL;
 
   reset_internal_getopt();
-  while ((opt = internal_getopt(_list, "v:")) != -1) {
+  while ((opt = internal_getopt(_list, "Vv:")) != -1) {
     switch (opt) {
+    case 'V':
+      printf(NAME " " VERSION "\n");
+      goto out;  
     case 'v':
       varname = malloc(strlen(list_optarg) + 1);
       strcpy(varname, list_optarg);
@@ -487,6 +492,7 @@ e_builtin (WORD_LIST *_list)
 
   return EXIT_SUCCESS;
 #else
+out:
   free(varname);
 
   return EXECUTION_SUCCESS;

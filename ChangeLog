@@ -1,6 +1,7 @@
 2014-08-21  Yu-Jie Lin	<livibetter@gmail.com>
 [FILES]
 	* add: README.rst
+	* add: version.h
 	* rename: EXAMPLES to examples/basic.sh
 	* renaem: README to README.e2718
 
@@ -8,9 +9,13 @@
 	* add: Yu-Jie Lin
 
 [Makefile]
+	* remove dist target
 	* add install target: prefix for changing installed location
 	* add install-strip target
 	* add uninstall target
+
+[e.c]
+	* main: add -V option in loadable to display version string
 
 2014-08-20  Yu-Jie Lin	<livibetter@gmail.com>
 [FILES]
