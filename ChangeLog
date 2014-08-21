@@ -1,6 +1,8 @@
 2014-08-21  Yu-Jie Lin	<livibetter@gmail.com>
 [FILES]
+	* add: README.rst
 	* rename: EXAMPLES to examples/basic.sh
+	* renaem: README to README.e2718
 
 [AUTHORS]
 	* add: Yu-Jie Lin

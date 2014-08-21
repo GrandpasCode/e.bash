@@ -1,0 +1,122 @@
+=================================
+e.bash: tiny expression evaluator
+=================================
+
+**e.bash** is a Bash loadable extension, just like ``printf`` or ``read``, it
+runs fast. It's a fork of |ee|__, which was made for calculation with float
+numbers in 2001.
+
+.. |ee| replace:: *e*
+__ History_
+
+.. contents:: **Contents**
+   :local:
+
+
+Who should use e.bash?
+======================
+
+No one, and no one should use ``bc``, too, if you are doing mass calculations
+with float numbers in shell scripting. If you are doing that, then you are
+doing it wrong. Use another shell that supports float natively, or the better,
+use another programming language for that kind of task.
+
+How is it wrong? Have you seen the numbers in Benchmark_? How much processing
+power have you wasted? Bash isn't meant for mass float calculation, in fact, it
+can't. That's why many people use external ``bc``, and most of them ain't aware
+of how costly to invoke external command.
+
+Nevertheless, if you just want to say "Because I can," well, go ahead.
+
+Or just want to get ``1 + 1 = ?``, then either programs are fine to use.
+
+
+Usage
+=====
+
+Loadable
+--------
+
+.. code:: sh
+
+  $ enable -f /path/to/e.bash e
+  $ e -v VARNAME [expression]
+
+The result will be stored (Variable Binding) to ``$VARNAME``, of course, you
+can use with Command Substitution:
+
+.. code:: sh
+
+  $ echo $(e [expression])
+
+Command
+-------
+
+.. code:: sh
+
+  $ ./e [expression]
+
+
+Benchmark
+=========
+
+.. code:: sh
+
+  $ make benchmark
+
+Sample result:
+
++-----------------+--------+
+| method          | runs   |
++=================+========+
+| original ``e``  | 554    |
++-----------------+--------+
+| ``e``           | 596    |
++-----------------+--------+
+| loadable        | 1,125  |
++-----------------+--------+
+| loadable ``-v`` | 12,921 |
++-----------------+--------+
+
+Examples
+--------
+
++----------------+----------------+
+| script         | time (seconds) |
++================+================+
+| ``sine.sh``    | 0.028          |
++----------------+----------------+
+| ``sine.bc.sh`` | 0.407          |
++----------------+----------------+
+
+
+History
+=======
+
+The original |e|_ was written by Dimitromanolakis Apostolos in 2001, the
+version 0.02718_ was released on 2011-07-11. From the original website e_:
+
+.. |e| replace:: **e**
+.. _e: http://web.archive.org/web/20090924080521/http://www.softnet.tuc.gr/%7Eapdim/projects/e/
+.. _0.02718: https://bitbucket.org/livibetter/e.bash/commits/tag/v0.02718
+
+  Some time ago while I [Dimitromanolakis Apostolos] was doing some homework for my university class, I needed a quick way to evaluate expressions, while I was typing at the command prompt. I found two solutions, using bc or gnuplot. bc has fixed precision which defaults to 0, so to evaluate an expression involving decimal results you need to issue a command like "scale=5" beforehand. On the other hand using gnuplot (and bc if it matters) involves loading the executable, evaluating your expression using the "print" command and quitting using the "quit" command. I needed something quicker..
+
+  ...so, I coded *e*.
+
+  e is a command line expression evaluator. It was designed to be as small as possible, and quick to use. Therefore the name "e" was chosen, so that while you are at the command prompt you can evaluate an expression with only 2 keystrokes overhead. e manages to be under 8k in size on most compilers that I tried. My current record is 7000 bytes for v0.02718. 
+
+In August, 2014, e was forked and transformed into a Bash loadable extension by
+Yu-Jie Lin (@livibetter) on Bitbucket.
+
+
+Copyright
+=========
+
+This project is licensed under the GNU General Public License Version 2, see
+COPYING_::
+
+    Copyright (C) 2014  Yu-Jie Lin
+    Copyright (C) 2001  Dimitromanolakis Apostolos
+
+.. _COPYING: COPYING
