@@ -1,3 +1,19 @@
+2014-08-26  Yu-Jie Lin	<livibetter@gmail.com>
+[check.sh]
+	* TEST: make e2718 test result skippable
+	* TEST: move expect to first, enable to pass input as array
+	* test spaces, 2*3 and 2 * 3
+	* test syntax error message
+
+[e.c]
+	* define: SUCCESS and FAILURE
+	* main, next: simplify input process by using concatenated string of
+	  argv or of word list
+	* syntax: change the two error message arrow style at exact
+	  character 16
+	* strauto: automatic memmory allocation for strcpy or re-allocation
+	  for strcat
+
 2014-08-21  Yu-Jie Lin	<livibetter@gmail.com>
 [FILES]
 	* add: README.rst

@@ -40,9 +40,13 @@
 #ifndef BASH_LOADABLE
 #define FMTPNT(...) printf(__VA_ARGS__)
 #define FORMAT(s)   format(s)
+#define SUCCESS     EXIT_SUCCESS
+#define FAILURE     EXIT_FAILURE
 #else
 #define FMTPNT(...) sprintf(result + strlen(result), __VA_ARGS__)
 #define FORMAT(s)   format(s, varname)
+#define SUCCESS     EXECUTION_SUCCESS
+#define FAILURE     EXECUTION_FAILURE
 #endif
 
 
@@ -53,17 +57,10 @@
 
 typedef double type;
 
+// concatenated expression from argv or WORD_LIST
+char *e;
 char  c;
 char *p;
-
-#ifndef BASH_LOADABLE
-int    argc;
-int    arg;
-char **argv;
-#else
-WORD_LIST *BEGIN;
-WORD_LIST *list;
-#endif
 
 
 type E();
@@ -91,71 +88,20 @@ type term();
 void
 next ()
 {
-#ifndef BASH_LOADABLE
-  do {
-    if (arg != argc && !*p)
-      p = argv[++arg];
-
-    if (arg != argc)
-      c = *p++;
-    else
-      c = 0;
-  } while (c == ' ');
-#else
-  do {
-    if (list->next && !*p) {
-      list = list->next;
-      p = list->word->word;
-    }
-
-    if (list)
-      c = *p++;
-    else
-      c = 0;
-  } while (c == ' ');
-#endif
+  while ((c = *p++) == ' ');
 }
 
 
 void
 syntax ()
 {
-  int tc;
-  int c = -1;
-#ifndef BASH_LOADABLE
-  int g =  1;
-  char *t = argv[g];
-#else
-  WORD_LIST *list = BEGIN;
-  char *t = list->word->word;
-#endif
+  int tc = p - e - 1;
+  int c;
+  char *t = e;
 
-  while (true) {
-    if (t == p)
-      tc = c;
-    c++;
+  puts(e);
 
-#ifndef BASH_LOADABLE
-    if (g != argc && !*t)
-      t = argv[++g];
-
-    if (g != argc)
-#else
-    if (list->next && !*t) {
-      list = list->next;
-      t = list->word->word;
-    }
-
-    if (list)
-#endif
-      putchar(*t++);
-    else
-      break;
-  }
-
-  putchar('\n');
-
-  if (tc > 16) {
+  if (tc >= 16) {
     for (c = 0; c < tc - 16; c++)
       putchar(' ');
     printf("syntax error ---^\n");
@@ -165,7 +111,7 @@ syntax ()
     printf("^--- syntax error\n");
   }
 
-  exit(EXIT_FAILURE);
+  exit(FAILURE);
 }
 
 
@@ -173,7 +119,7 @@ void
 unknown (char *s)
 {
   printf("'%s': unknown function\n", s);
-  exit(EXIT_FAILURE);
+  exit(FAILURE);
 }
 
 
@@ -450,24 +396,42 @@ out:
 }
 
 
+/*
+ * automatic memmory allocation for strcpy or re-allocation for strcat
+ */
+char *
+strauto (char *dest, char *src) {
+  if (dest == NULL) {
+    if ((dest = malloc(strlen(src) + 1)))
+      return strcpy(dest, src);
+
+    fprintf(stderr, "error: malloc failed\n");
+    exit(FAILURE);
+  }
+
+  if ((dest = realloc(dest, strlen(dest) + strlen(src) + 1)))
+    return strcat(dest, src);
+
+  fprintf(stderr, "error: realloc failed\n");
+  exit(FAILURE);
+}
+
+
 int
 #ifndef BASH_LOADABLE
-main (int _argc, char **_argv)
+main (int argc, char **argv)
 #else
-e_builtin (WORD_LIST *_list)
+e_builtin (WORD_LIST *list)
 #endif
 {
 #ifndef BASH_LOADABLE
-  argc = _argc;
-  argv = _argv;
-  arg = 1;
-  p = argv[arg];
+  int i;
 #else
   int opt;
   char *varname = NULL;
 
   reset_internal_getopt();
-  while ((opt = internal_getopt(_list, "Vv:")) != -1) {
+  while ((opt = internal_getopt(list, "Vv:")) != -1) {
     switch (opt) {
     case 'V':
       printf(NAME " " VERSION "\n");
@@ -480,22 +444,40 @@ e_builtin (WORD_LIST *_list)
       return EX_USAGE;
     }
   }
-  BEGIN = list = loptend;
-  p = list->word->word;
+  list = loptend;
 #endif
+
+  e = strauto(e, "");
+
+#ifndef BASH_LOADABLE
+  for (i = 1; i < argc; i++) {
+    e = strauto(e, argv[i]);
+    e = strauto(e, " ");
+  }
+#else
+  while (list) {
+    e = strauto(e, list->word->word);
+    list = list->next;
+    e = strauto(e, " ");
+  }
+#endif
+  e[strlen(e) - 1] = '\0';
+  p = e;
 
   next();
   FORMAT(S());
 
+  free(e);
+
 #ifndef BASH_LOADABLE
   printf("\n");
 
-  return EXIT_SUCCESS;
+  return SUCCESS;
 #else
 out:
   free(varname);
 
-  return EXECUTION_SUCCESS;
+  return SUCCESS;
 #endif
 }
 
