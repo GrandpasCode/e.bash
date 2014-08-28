@@ -1,4 +1,4 @@
-2014-08-29  Yu-Jie Lin	<livibetter@gmail.com>
+2014-08-29  Yu-Jie Lin  <livibetter@gmail.com>
 [Makefile]
 	* check-style: check trailing whitespace and doc8
 
@@ -8,7 +8,7 @@
 [e.c]
 	* main: add -V for version string for command, add -h for help message
 
-2014-08-28  Yu-Jie Lin	<livibetter@gmail.com>
+2014-08-28  Yu-Jie Lin  <livibetter@gmail.com>
 [check.sh]
 	* TEST_F: check test result with function
 	* test randf
@@ -18,7 +18,7 @@
 	* function: add constant randmax for RAND_MAX, function rand (int) and
 	  function randf (double) random number
 
-2014-08-26  Yu-Jie Lin	<livibetter@gmail.com>
+2014-08-26  Yu-Jie Lin  <livibetter@gmail.com>
 [check.sh]
 	* TEST: make e2718 test result skippable
 	* TEST: move expect to first, enable to pass input as array
@@ -34,7 +34,7 @@
 	* strauto: automatic memmory allocation for strcpy or re-allocation
 	  for strcat
 
-2014-08-21  Yu-Jie Lin	<livibetter@gmail.com>
+2014-08-21  Yu-Jie Lin  <livibetter@gmail.com>
 [FILES]
 	* add: README.rst
 	* add: version.h
@@ -55,7 +55,7 @@
 [e.c]
 	* main: add -V option in loadable to display version string
 
-2014-08-20  Yu-Jie Lin	<livibetter@gmail.com>
+2014-08-20  Yu-Jie Lin  <livibetter@gmail.com>
 [FILES]
 	* remove: e
 	* add: AUTHORS

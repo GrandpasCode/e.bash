@@ -25,7 +25,7 @@
 # ./f.sh '2*sin[$X]' -pi pi -1 1
 # ./f.sh 'sin[$X*pi/180]' 0 359 -1 1
 # for i in {0..720..15}; do ./f.sh 'sin[$X*pi/180]' $i $i+359 -1 1; sleep 0.05; done
-# ./f.sh 'tan[$X]' -pi pi -pi pi 
+# ./f.sh 'tan[$X]' -pi pi -pi pi
 # ./f.sh 'floor[$X]' -5 5 -5 5
 # ./f.sh 'ceil[$X]' -5 5 -5 5
 # ./f.sh '[$X^3+3*$X^2-6*$X-8]/4' -5 4 -4 6

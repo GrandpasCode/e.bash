@@ -184,11 +184,22 @@ version 0.02718_ was released on 2011-07-11. From the original website e_:
 .. _e: http://web.archive.org/web/20090924080521/http://www.softnet.tuc.gr/%7Eapdim/projects/e/
 .. _0.02718: https://bitbucket.org/livibetter/e.bash/commits/tag/v0.02718
 
-  Some time ago while I [Dimitromanolakis Apostolos] was doing some homework for my university class, I needed a quick way to evaluate expressions, while I was typing at the command prompt. I found two solutions, using bc or gnuplot. bc has fixed precision which defaults to 0, so to evaluate an expression involving decimal results you need to issue a command like "scale=5" beforehand. On the other hand using gnuplot (and bc if it matters) involves loading the executable, evaluating your expression using the "print" command and quitting using the "quit" command. I needed something quicker..
+  Some time ago while I [Dimitromanolakis Apostolos] was doing some homework
+  for my university class, I needed a quick way to evaluate expressions, while
+  I was typing at the command prompt. I found two solutions, using bc or
+  gnuplot. bc has fixed precision which defaults to 0, so to evaluate an
+  expression involving decimal results you need to issue a command like
+  "scale=5" beforehand. On the other hand using gnuplot (and bc if it matters)
+  involves loading the executable, evaluating your expression using the "print"
+  command and quitting using the "quit" command. I needed something quicker..
 
   ...so, I coded *e*.
 
-  e is a command line expression evaluator. It was designed to be as small as possible, and quick to use. Therefore the name "e" was chosen, so that while you are at the command prompt you can evaluate an expression with only 2 keystrokes overhead. e manages to be under 8k in size on most compilers that I tried. My current record is 7000 bytes for v0.02718. 
+  e is a command line expression evaluator. It was designed to be as small as
+  possible, and quick to use. Therefore the name "e" was chosen, so that while
+  you are at the command prompt you can evaluate an expression with only 2
+  keystrokes overhead. e manages to be under 8k in size on most compilers that
+  I tried. My current record is 7000 bytes for v0.02718.
 
 In August, 2014, e was forked and transformed into a Bash loadable extension by
 Yu-Jie Lin (@livibetter) on Bitbucket.
