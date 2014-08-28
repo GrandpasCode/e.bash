@@ -10,6 +10,11 @@ Changes since 0.1.0 (2014-08-21)
 * add constant randmax for maximum integer for ineteger random number
 * add function rand for integer random number
 * add function randf for float random number, shorthand for rand / randmax
+* add -h for help message
+
+[command]
+
+* add -V for version string
 
 [examples]
 

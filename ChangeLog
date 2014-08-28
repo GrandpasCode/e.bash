@@ -1,7 +1,15 @@
+2014-08-29  Yu-Jie Lin	<livibetter@gmail.com>
+[check.sh]
+	* test version string
+
+[e.c]
+	* main: add -V for version string for command, add -h for help message
+
 2014-08-28  Yu-Jie Lin	<livibetter@gmail.com>
 [check.sh]
 	* TEST_F: check test result with function
 	* test randf
+	* test version string
 
 [e.c]
 	* function: add constant randmax for RAND_MAX, function rand (int) and

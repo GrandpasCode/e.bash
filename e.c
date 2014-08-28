@@ -18,6 +18,9 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#ifndef BASH_LOADABLE
+#include <getopt.h>
+#endif
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -34,19 +37,46 @@
 #include "version.h"
 
 #define NAME    "e"
-#define USAGE   NAME " [-v VARNAME] [expression]"
+#define USAGE   NAME " [OPTIONS] [--] [expression]"
 
+char *e_doc[] = {
+  "Tiny expression evaluator.",
+  "",
+  "Options:",
+  "",
+  "  -h        display this help message",
+  "  -V        display version string",
+#ifdef BASH_LOADABLE
+  "  -v VAR    store the result to VAR variable",
+#endif
+  (char *) NULL
+};
+
+#define COPYRIGHT \
+        "Copyright (C) 2014 Authors of e.bash\n"\
+        "License GPLv2+: GNU GPL version 2 or later <https://www.gnu.org/licenses/gpl-2.0.html>\n"\
+        "This is free software: you are free to change and redistribute it.\n"\
+        "There is NO WARRANTY, to the extent permitted by law."
+
+#define URL_HOMEPAGE  "https://bitbucket.org/livibetter/e.bash"
+#define URL_ISSUES    URL_HOMEPAGE "/issues"
 
 #ifndef BASH_LOADABLE
+#define GETOPT()    getopt(argc, argv, "hV")
+#define OPTARG      optarg
 #define FMTPNT(...) printf(__VA_ARGS__)
 #define FORMAT(s)   format(s)
 #define SUCCESS     EXIT_SUCCESS
 #define FAILURE     EXIT_FAILURE
+#define EXIT_USAGE  EXIT_FAILURE
 #else
+#define GETOPT()    internal_getopt(list, "hVv:")
+#define OPTARG      list_optarg
 #define FMTPNT(...) sprintf(result + strlen(result), __VA_ARGS__)
 #define FORMAT(s)   format(s, varname)
 #define SUCCESS     EXECUTION_SUCCESS
 #define FAILURE     EXECUTION_FAILURE
+#define EXIT_USAGE  EX_USAGE
 #endif
 
 
@@ -392,7 +422,9 @@ format (type X, char *varname)
   } else
     FMTPNT("%.0f", i);
 
-#ifdef BASH_LOADABLE
+#ifndef BASH_LOADABLE
+  printf("\n");
+#else
 out:
   if (varname)
     bind_variable(varname, result, 0);
@@ -423,6 +455,21 @@ strauto (char *dest, char *src) {
 }
 
 
+void
+print_help () {
+  int i;
+
+  puts("Usage: " USAGE);
+  for (i = 0; i < sizeof(e_doc) / sizeof(char *); i++)
+    if (e_doc[i])
+      puts(e_doc[i]);
+
+  printf("\n"\
+         "Report bugs to <https://bitbucket.org/livibetter/e.bash/issues>\n"\
+         "Home page: <https://bitbucket.org/livibetter/e.bash>\n");
+}
+
+
 int
 #ifndef BASH_LOADABLE
 main (int argc, char **argv)
@@ -430,37 +477,47 @@ main (int argc, char **argv)
 e_builtin (WORD_LIST *list)
 #endif
 {
+  int opt;
 #ifndef BASH_LOADABLE
   int i;
 #else
-  int opt;
   char *varname = NULL;
+#endif
 
+#ifdef BASH_LOADABLE
   reset_internal_getopt();
-  while ((opt = internal_getopt(list, "Vv:")) != -1) {
+#endif
+  while ((opt = GETOPT()) != -1) {
     switch (opt) {
+    case 'h':
+      print_help();
+      goto out;
     case 'V':
-      printf(NAME " " VERSION "\n");
-      goto out;  
+      puts(NAME " " VERSION);
+      puts(COPYRIGHT);
+      goto out;
+#ifdef BASH_LOADABLE
     case 'v':
-      varname = malloc(strlen(list_optarg) + 1);
-      strcpy(varname, list_optarg);
+      varname = strauto(varname, OPTARG);
       break;
+#endif
     default:
-      return EX_USAGE;
+#ifndef BASH_LOADABLE
+      fprintf(stderr, "Usage: " USAGE "\n");
+#endif
+      return EXIT_USAGE;
     }
   }
-  list = loptend;
-#endif
 
   e = strauto(e, "");
 
 #ifndef BASH_LOADABLE
-  for (i = 1; i < argc; i++) {
+  for (i = optind; i < argc; i++) {
     e = strauto(e, argv[i]);
     e = strauto(e, " ");
   }
 #else
+  list = loptend;
   while (list) {
     e = strauto(e, list->word->word);
     list = list->next;
@@ -477,26 +534,16 @@ e_builtin (WORD_LIST *list)
 
   free(e);
 
-#ifndef BASH_LOADABLE
-  printf("\n");
-
-  return SUCCESS;
-#else
 out:
+#ifdef BASH_LOADABLE
   free(varname);
+#endif
 
   return SUCCESS;
-#endif
 }
 
 
 #ifdef BASH_LOADABLE
-char *e_doc[] = {
-  "Tiny expression evaluator.",
-  (char *) NULL
-};
-
-
 struct builtin e_struct = {
   "e",
   e_builtin,

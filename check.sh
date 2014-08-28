@@ -33,7 +33,7 @@ _TEST () {
 
   RE2718="$("$E2718" "${T[@]}")"
   REPROG="$("$EPROG" "${T[@]}")"
-  REBASH="$( (enable -f "$EBASH" e && e -- "${T[@]}") )"
+  REBASH="$( (enable -f "$EBASH" e && e "${T[@]}") )"
 
   ERRORS=0
   if [[ $SKIP_E2718 ]]; then
@@ -65,13 +65,22 @@ _TEST_RAND_10 () {
   ((0 <= $2)) && (($2 < 10))
 }
 
+_TEST_VERSION () {
+  local VERSION D
+
+  VERSION="e $(<version.h egrep -o '[0-9]+\.[0-9]+\.[0-9]+')"
+  D=$(head -1 <<< "$2")
+
+  [[ $VERSION == $D ]]
+}
+
 #########
 # basic #
 #########
 
 TEST 0 0
 TEST 1 1
-TEST -1 -1
+TEST -1 -- -1
 TEST 3.14159265358979 pi
 TEST 1 sin[pi/2]
 
@@ -102,6 +111,13 @@ SKIP_E2718=1
 TEST 0 floor[randf*1]
 SKIP_E2718=1
 TEST_F _TEST_RAND_10 '?' floor[randf*10]
+
+##################
+# version string #
+##################
+
+SKIP_E2718=1
+TEST_F _TEST_VERSION '?' -V
 
 echo
 
