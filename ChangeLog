@@ -1,4 +1,7 @@
 2014-08-29  Yu-Jie Lin	<livibetter@gmail.com>
+[Makefile]
+	* check-style: check trailing whitespace and doc8
+
 [check.sh]
 	* test version string
 

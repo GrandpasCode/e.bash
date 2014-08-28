@@ -60,8 +60,20 @@ $(E2718):
 	rm -f $(E2718)/e
 
 .PHONY: benchmark check
-benchmark check: e2718 e e.bash
+benchmark check: check-style e2718 e e.bash
 	$(SHELL) $@.sh
+
+.PHONY: check-style
+check-style:
+	@doc8 *.rst
+	@egrep -rnI \
+	       --exclude=*.rst \
+	       --exclude=COPYING \
+	       --exclude=README.e2718 \
+	       --exclude-dir=$(E2718) \
+	       '\s+$$' * \
+	&& exit 1 \
+	|| exit 0
 
 .PHONY: install
 install: $(TARGETS)
