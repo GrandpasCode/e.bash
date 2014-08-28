@@ -183,6 +183,9 @@ function ()
   if (!strcmp(f,"e" ))
     return M_E;
 
+  if (!strcmp(f,"randmax"))
+    return RAND_MAX;
+
   v = term();
 
   #define mathfunc(a,b) if(!strcmp(f,a)) return b;
@@ -210,6 +213,9 @@ function ()
 
   mathfunc("ln"    , log(v));
   mathfunc("log"   , log(v) / log(2));
+
+  mathfunc("rand"  , rand());
+  mathfunc("randf" , (type) rand() / (type) RAND_MAX);
 
   unknown(f);
   return 0;
@@ -463,6 +469,8 @@ e_builtin (WORD_LIST *list)
 #endif
   e[strlen(e) - 1] = '\0';
   p = e;
+
+  srand(time(NULL));
 
   next();
   FORMAT(S());

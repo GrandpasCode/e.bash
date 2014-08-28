@@ -1,3 +1,12 @@
+2014-08-28  Yu-Jie Lin	<livibetter@gmail.com>
+[check.sh]
+	* TEST_F: check test result with function
+	* test randf
+
+[e.c]
+	* function: add constant randmax for RAND_MAX, function rand (int) and
+	  function randf (double) random number
+
 2014-08-26  Yu-Jie Lin	<livibetter@gmail.com>
 [check.sh]
 	* TEST: make e2718 test result skippable
