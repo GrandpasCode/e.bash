@@ -1,3 +1,7 @@
+2014-08-30  Yu-Jie Lin  <livibetter@gmail.com>
+[e.c]
+	* print_help: use URL_ISSUES and URL_HOMEPAGE
+
 2014-08-29  Yu-Jie Lin  <livibetter@gmail.com>
 [Makefile]
 	* check-style: check trailing whitespace and doc8

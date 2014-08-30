@@ -465,8 +465,8 @@ print_help () {
       puts(e_doc[i]);
 
   printf("\n"\
-         "Report bugs to <https://bitbucket.org/livibetter/e.bash/issues>\n"\
-         "Home page: <https://bitbucket.org/livibetter/e.bash>\n");
+         "Report bugs to <" URL_ISSUES ">\n"\
+         "Home page: <" URL_HOMEPAGE ">\n");
 }
 
 
