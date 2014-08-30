@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <math.h>
 
 #ifdef BASH_LOADABLE
@@ -127,7 +128,6 @@ syntax ()
 {
   int tc = p - e - 1;
   int c;
-  char *t = e;
 
   puts(e);
 
@@ -271,6 +271,8 @@ term ()
     return m * constant();
   else if (c >= 'a' && c <= 'z')
     return m * function();
+
+  return 0;
 }
 
 
@@ -457,7 +459,7 @@ strauto (char *dest, char *src) {
 
 void
 print_help () {
-  int i;
+  unsigned int i;
 
   puts("Usage: " USAGE);
   for (i = 0; i < sizeof(e_doc) / sizeof(char *); i++)
