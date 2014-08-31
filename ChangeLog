@@ -1,4 +1,9 @@
 2014-08-31  Yu-Jie Lin  <livibetter@gmail.com>
+[Makefile]
+	* benchmark: force clean
+	* check: -Werror, treat warning as error for e and e.bash
+	* check: force clean, so -Werror will be effective
+
 [check.sh]
 	* test: constant dblmin
 	* test: constant dblmax

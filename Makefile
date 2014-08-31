@@ -32,6 +32,11 @@ E2718 = e-0.02718
 CFLAGS  = -std=c99 -g -O2 -Wall -Wextra
 LDFLAGS = -lm
 
+# when with check target, treat warnings as error for e and e.bash
+ifneq ($(filter check,$(MAKECMDGOALS)),)
+CFLAGS += -Werror
+endif
+
 .PHONY: all
 all: $(TARGETS)
 
@@ -60,7 +65,7 @@ $(E2718):
 	rm -f $(E2718)/e
 
 .PHONY: benchmark check
-benchmark check: check-style e2718 e e.bash
+benchmark check: clean check-style e2718 e e.bash
 	$(SHELL) $@.sh
 
 .PHONY: check-style
