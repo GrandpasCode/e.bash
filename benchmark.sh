@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright (C) 2001  Dimitromanolakis Apostolos
+# Copyright (C) 2014  Yu-Jie Lin
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -15,7 +15,7 @@
 # this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-DURATION=5
+: ${DURATION:=5}
 TEST='sin[pi/2]'
 EXPECT=1
 
@@ -46,12 +46,20 @@ test_command () {
   ) &>/dev/null &
   tmpcount_pid=$!
   sleep $DURATION
-  kill $tmpcount_pid
+  if ! kill $tmpcount_pid; then
+    echo -e "\e[1;31msubprocess ($tmpcount_pid) already gone," \
+            "something went wrong\e[0m" >&2
+    exit 1
+  fi
 
   RUNS=$(($(wc -l < "$tmpcount") / $DURATION))
   printf "\e[3K\e[0G\e[1;34m%'7.0f\e[0m runs per second via %s\n" "$RUNS" "$VIA"
   rm "$tmpcount"
 
+  if ((RUNS == 0)); then
+    echo -e "\e[1;31m0 runs, something went wrong\e[0m" >&2
+    exit 1
+  fi
 }
 
 SETUP=()

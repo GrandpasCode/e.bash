@@ -1,4 +1,15 @@
 2014-09-01  Yu-Jie Lin  <livibetter@gmail.com>
+[Makefile]
+	* benchmark, check: benchmark is run and depended by check, with
+	  DURATION = 1 second
+
+[benchmark.sh]
+	* COPYRIGHT: fix name and year
+	* DURATION: can be set via environment variable, for benchmark and
+	  check targets of Makefile
+	* test_command: exit unsuccessfully when subprocess is not found or 0
+	  runs
+
 [e.c]
 	* debug_syntax, DEBUG_SYNTAX, DPRINT: debugging message functions
 	* E, F, G, H, function, main: debugging messages

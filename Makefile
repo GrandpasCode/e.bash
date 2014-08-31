@@ -32,9 +32,13 @@ E2718 = e-0.02718
 CFLAGS  = -std=c99 -g -O2 -Wall -Wextra
 LDFLAGS = -lm
 
-# when with check target, treat warnings as error for e and e.bash
+# when with check target:
+# - treat warnings as error for e and e.bash
+# - set benchmark DURATION = 1
+BENCHMARK_DURATION = 5
 ifneq ($(filter check,$(MAKECMDGOALS)),)
 CFLAGS += -Werror
+BENCHMARK_DURATION = 1
 endif
 
 .PHONY: all
@@ -64,8 +68,12 @@ $(E2718):
 	tar xf $(E2718).tar.gz
 	rm -f $(E2718)/e
 
-.PHONY: benchmark check
-benchmark check: clean check-style e2718 e e.bash
+.PHONY: benchmark
+benchmark: clean check-style e2718 e e.bash
+	DURATION=$(BENCHMARK_DURATION) $(SHELL) $@.sh
+
+.PHONY: check
+check: benchmark
 	$(SHELL) $@.sh
 
 .PHONY: check-style
