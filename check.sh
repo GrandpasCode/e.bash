@@ -65,6 +65,16 @@ _TEST_RAND_10 () {
   ((0 <= $2)) && (($2 < 10))
 }
 
+# check Unix timestamp within range of 1 second
+# 1 second should be enough when seconds crossing between calls of time from e
+# and test function
+_TEST_TIME () {
+  local t
+
+  printf -v t '%(%s)T' -1
+  ((t == $2)) || (($2 <= t - 1))
+}
+
 _TEST_VERSION () {
   local VERSION D
 
@@ -139,6 +149,12 @@ TEST  1    trunc[ 1  ]
 SKIP_E2718=1
 TEST -1 -- trunc[-1  ]
 
+# time
+######
+
+SKIP_E2718=1
+TEST_F _TEST_TIME ? time
+
 ################
 # syntax error #
 ################
@@ -158,6 +174,18 @@ SKIP_E2718=1
 TEST 0 floor[randf*1]
 SKIP_E2718=1
 TEST_F _TEST_RAND_10 '?' floor[randf*10]
+
+# srand
+#######
+
+SKIP_E2718=1
+TEST 1205554746 srand[3] +rand
+SKIP_E2718=1
+TEST 1205554746 srand[pi]+rand
+SKIP_E2718=1
+TEST 2411109492 srand[pi]+rand+srand[pi]+rand
+SKIP_E2718=1
+TEST 1688702731 srand[pi]+rand+rand
 
 ##################
 # version string #

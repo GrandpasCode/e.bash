@@ -4,13 +4,19 @@
 	* test: constant dblmax
 	* test: constant randmax
 	* test: function round
+	* test: function srand
+	* test: function time
 	* test: function trunc
 
 [e.c]
 	* function: add constant dblmin, DBL_MIX of float.h
 	* function: add constant dblmax, DBL_MAX of float.h
 	* function: add function round
+	* function: add function srand for setting random seed, it returns
+	  value of 0
+	* function: add function time for Unix timestamp
 	* function: add function trunc
+	* function: define mathfret to return specific value, for srand
 
 2014-08-30  Yu-Jie Lin  <livibetter@gmail.com>
 [e.c]

@@ -224,6 +224,8 @@ function ()
   v = term();
 
   #define mathfunc(a,b) if(!strcmp(f,a)) return b;
+  #define mathfret(a,b,r) \
+          if(!strcmp(f,a)) { b; return r; }
 
   mathfunc("abs"   , fabs(v));
   mathfunc("fabs"  , fabs(v));
@@ -251,6 +253,8 @@ function ()
   mathfunc("ln"    , log(v));
   mathfunc("log"   , log(v) / log(2));
 
+  mathfunc("time"  , (type) time((time_t *) &v));
+  mathfret("srand" , srand((unsigned int) v), 0);
   mathfunc("rand"  , rand());
   mathfunc("randf" , (type) rand() / (type) RAND_MAX);
 
