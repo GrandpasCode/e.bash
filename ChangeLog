@@ -4,6 +4,7 @@
 	* E, F, G, H, function, main: debugging messages
 	* function: type casting for rand and srand
 	* main: add -d for debugging messages
+	* main [loadable]: fix syntax error because of dirty pointers
 
 2014-08-31  Yu-Jie Lin  <livibetter@gmail.com>
 [Makefile]

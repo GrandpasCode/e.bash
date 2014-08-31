@@ -574,6 +574,9 @@ e_builtin (WORD_LIST *list)
    * reset variables
    */
   DEBUG = false;
+  e = NULL;
+  p = NULL;
+  c = 0;
 #endif
 
 #ifdef BASH_LOADABLE
