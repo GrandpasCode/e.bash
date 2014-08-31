@@ -2,6 +2,7 @@
 [check.sh]
 	* test: constant dblmin
 	* test: constant dblmax
+	* test: constant randmax
 
 [e.c]
 	* function: add constant dblmin, DBL_MIX of float.h

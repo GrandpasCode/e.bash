@@ -129,6 +129,8 @@ TEST $'12345678901234567pi\n syntax error ---^' 12345678901234567pi
 ##########
 
 SKIP_E2718=1
+TEST 2147483647 randmax
+SKIP_E2718=1
 TEST 0 floor[randf*1]
 SKIP_E2718=1
 TEST_F _TEST_RAND_10 '?' floor[randf*10]
