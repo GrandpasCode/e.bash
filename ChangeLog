@@ -3,10 +3,14 @@
 	* test: constant dblmin
 	* test: constant dblmax
 	* test: constant randmax
+	* test: function round
+	* test: function trunc
 
 [e.c]
 	* function: add constant dblmin, DBL_MIX of float.h
 	* function: add constant dblmax, DBL_MAX of float.h
+	* function: add function round
+	* function: add function trunc
 
 2014-08-30  Yu-Jie Lin  <livibetter@gmail.com>
 [e.c]

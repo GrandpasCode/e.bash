@@ -115,6 +115,30 @@ TEST "\
 8"\
      dblmax
 
+#############
+# functions #
+#############
+
+# round
+#######
+
+SKIP_E2718=1
+TEST  1 round[ 0.5]
+SKIP_E2718=1
+TEST -1 round[-0.5]
+
+# trunc
+#######
+
+SKIP_E2718=1
+TEST  1    trunc[ 1.5]
+SKIP_E2718=1
+TEST -1 -- trunc[-1.5]
+SKIP_E2718=1
+TEST  1    trunc[ 1  ]
+SKIP_E2718=1
+TEST -1 -- trunc[-1  ]
+
 ################
 # syntax error #
 ################

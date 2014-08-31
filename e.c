@@ -229,6 +229,8 @@ function ()
   mathfunc("fabs"  , fabs(v));
   mathfunc("floor" , floor(v));
   mathfunc("ceil"  , ceil(v));
+  mathfunc("round" , round(v));
+  mathfunc("trunc" , trunc(v));
   mathfunc("sqrt"  , sqrt(v));
   mathfunc("exp"   , exp(v));
 
