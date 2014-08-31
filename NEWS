@@ -13,6 +13,7 @@ Changes since 0.2.0 (2014-08-29)
 * add function srand for setting random seed, it returns value of 0
 * add function time for Unix timestamp
 * add function trunc
+* add -d for debugging message
 
 
 Changes since 0.1.0 (2014-08-21)

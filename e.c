@@ -38,6 +38,15 @@
 
 #include "version.h"
 
+bool DEBUG = false;
+#define DPRINT(...)                     \
+        if (DEBUG) {                    \
+          fprintf(stderr, "DEBUG: ");   \
+          fprintf(stderr, __VA_ARGS__); \
+          fprintf(stderr, "\n");        \
+        }
+#define DPRINT_(...)   if (DEBUG) fprintf(stderr, __VA_ARGS__);
+
 #define NAME    "e"
 #define USAGE   NAME " [OPTIONS] [--] [expression]"
 
@@ -48,6 +57,7 @@ char *e_doc[] = {
   "",
   "  -h        display this help message",
   "  -V        display version string",
+  "  -d        display debugging messages",
 #ifdef BASH_LOADABLE
   "  -v VAR    store the result to VAR variable",
 #endif
@@ -64,7 +74,7 @@ char *e_doc[] = {
 #define URL_ISSUES    URL_HOMEPAGE "/issues"
 
 #ifndef BASH_LOADABLE
-#define GETOPT()    getopt(argc, argv, "hV")
+#define GETOPT()    getopt(argc, argv, "hVd")
 #define OPTARG      optarg
 #define FMTPNT(...) printf(__VA_ARGS__)
 #define FORMAT(s)   format(s)
@@ -72,7 +82,7 @@ char *e_doc[] = {
 #define FAILURE     EXIT_FAILURE
 #define EXIT_USAGE  EXIT_FAILURE
 #else
-#define GETOPT()    internal_getopt(list, "hVv:")
+#define GETOPT()    internal_getopt(list, "hVdv:")
 #define OPTARG      list_optarg
 #define FMTPNT(...) sprintf(result + strlen(result), __VA_ARGS__)
 #define FORMAT(s)   format(s, varname)
@@ -146,6 +156,19 @@ syntax ()
 }
 
 
+/**
+ * mark the character for debugging messages
+ */
+void
+debug_syntax (char *p)
+{
+  int tc = p - e;
+
+  fprintf(stderr, "DEBUG: %s\n", e);
+  fprintf(stderr, "DEBUG: %*s%s ", tc, "^", "---");
+}
+#define DEBUG_SYNTAX(p)  if (DEBUG) debug_syntax(p);
+
 void
 unknown (char *s)
 {
@@ -157,6 +180,7 @@ unknown (char *s)
 type
 constant ()
 {
+  char *dp = p;
   type r = 0;
 
   while (c >= '0' && c <= '9') {
@@ -190,6 +214,8 @@ constant ()
     r *= pow(10, m * term());
   }
 
+  DEBUG_SYNTAX(dp);
+  DPRINT_("%f\n", r);
   return r;
 }
 
@@ -198,34 +224,52 @@ type
 function ()
 {
   char f[20];
-  char *p;
+  char *dp = p;
+  char *q;
   type v;
 
-  p = f;
-  while (p - f < 19 && c >= 'a' && c <= 'z') {
-    *p++ = c;
+  q = f;
+  while (q - f < 19 && c >= 'a' && c <= 'z') {
+    *q++ = c;
     next();
   }
 
-  *p = 0;
+  *q = 0;
+
+  #define RETURN(r)                       \
+          do {                            \
+            DEBUG_SYNTAX(dp);             \
+            DPRINT_("%s = %f\n", f, r);   \
+            return r;                     \
+          } while (false);                \
 
   if (!strcmp(f,"pi"))
-    return M_PI;
+    RETURN(M_PI);
   if (!strcmp(f,"e" ))
-    return M_E;
+    RETURN(M_E);
 
   if (!strcmp(f, "dblmax"))
-    return DBL_MAX;
+    RETURN((type) DBL_MAX);
   if (!strcmp(f, "dblmin"))
-    return DBL_MIN;
+    RETURN((type) DBL_MIN);
   if (!strcmp(f,"randmax"))
-    return RAND_MAX;
+    RETURN((type) RAND_MAX);
 
   v = term();
 
-  #define mathfunc(a,b) if(!strcmp(f,a)) return b;
-  #define mathfret(a,b,r) \
-          if(!strcmp(f,a)) { b; return r; }
+  #define mathfunc(a,b)                         \
+          if(!strcmp(f,a)) {                    \
+            DEBUG_SYNTAX(dp);                   \
+            DPRINT_("%s(%f) = %f\n", f, v, b);  \
+            return b;                           \
+          }
+  #define mathfret(a,b,r)                             \
+          if(!strcmp(f,a)) {                          \
+            DEBUG_SYNTAX(dp);                         \
+            DPRINT_("void %s(%f) = %f\n", f, v, r);   \
+            b;                                        \
+            return r;                                 \
+          }
 
   mathfunc("abs"   , fabs(v));
   mathfunc("fabs"  , fabs(v));
@@ -254,8 +298,8 @@ function ()
   mathfunc("log"   , log(v) / log(2));
 
   mathfunc("time"  , (type) time((time_t *) &v));
-  mathfret("srand" , srand((unsigned int) v), 0);
-  mathfunc("rand"  , rand());
+  mathfret("srand" , srand((unsigned int) v), (type) 0);
+  mathfunc("rand"  , (type) rand());
   mathfunc("randf" , (type) rand() / (type) RAND_MAX);
 
   unknown(f);
@@ -303,11 +347,15 @@ factorial (type v)
 type
 H ()
 {
-  type r = term();
+  char *dp = p;
+  type q = term();
+  type r = q;
 
   if (c == '!') {
     next();
-    r = factorial(r);
+    r = factorial(q);
+    DEBUG_SYNTAX(dp);
+    DPRINT_("%f! = %f\n", q, r);
   }
 
   return r;
@@ -317,6 +365,7 @@ H ()
 type
 G ()
 {
+  char *dp = p;
   type q;
   type r = H();
 
@@ -324,6 +373,8 @@ G ()
     next();
     q = G();
     r = pow(r, q);
+    DEBUG_SYNTAX(dp);
+    DPRINT_("^ %f = %f\n", q, r);
   }
 
   return r;
@@ -333,19 +384,30 @@ G ()
 type
 F ()
 {
+  char *dp;
+  char  dc;
+  type q;
   type r = G();
 
   while (true) {
+    dp = p;
+    dc = c;
     if (c == '*') {
-      next(); r *= G();
+      next();
+      q = r;
+      r *= G();
     } else if (c == '/') {
       next();
+      q = r;
       r /= G();
     } else if (c == '%') {
       next();
+      q = r;
       r = fmod(r, G());
     } else
       break;
+    DEBUG_SYNTAX(dp);
+    DPRINT_("%c %f = %f\n", dc, q, r);
   }
 
   return r;
@@ -355,17 +417,26 @@ F ()
 type
 E ()
 {
+  char *dp;
+  char  dc;
+  type q;
   type r = F();
 
   while (true) {
+    dp = p;
+    dc = c;
     if (c == '+') {
       next();
+      q = r;
       r += F();
     } else if (c == '-') {
       next();
+      q = r;
       r -= F();
     } else
       break;
+    DEBUG_SYNTAX(dp);
+    DPRINT_("%c %f = %f\n", dc, q, r);
   }
 
   return r;
@@ -439,10 +510,13 @@ format (type X, char *varname)
   printf("\n");
 #else
 out:
-  if (varname)
+  DPRINT("result is %s", result);
+  if (varname) {
     bind_variable(varname, result, 0);
-  else
+    DPRINT("Bound result to %s", varname);
+  } else {
     printf("%s\n", result);
+  }
 #endif
 }
 
@@ -495,12 +569,18 @@ e_builtin (WORD_LIST *list)
   int i;
 #else
   char *varname = NULL;
+
+  /**
+   * reset variables
+   */
+  DEBUG = false;
 #endif
 
 #ifdef BASH_LOADABLE
   reset_internal_getopt();
 #endif
   while ((opt = GETOPT()) != -1) {
+    DPRINT("option = %c", opt);
     switch (opt) {
     case 'h':
       print_help();
@@ -509,9 +589,14 @@ e_builtin (WORD_LIST *list)
       puts(NAME " " VERSION);
       puts(COPYRIGHT);
       goto out;
+    case 'd':
+      DEBUG = true;
+      DPRINT("debug is on");
+      break;
 #ifdef BASH_LOADABLE
     case 'v':
       varname = strauto(varname, OPTARG);
+      DPRINT("varname = %s", varname);
       break;
 #endif
     default:

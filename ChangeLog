@@ -1,3 +1,10 @@
+2014-09-01  Yu-Jie Lin  <livibetter@gmail.com>
+[e.c]
+	* debug_syntax, DEBUG_SYNTAX, DPRINT: debugging message functions
+	* E, F, G, H, function, main: debugging messages
+	* function: type casting for rand and srand
+	* main: add -d for debugging messages
+
 2014-08-31  Yu-Jie Lin  <livibetter@gmail.com>
 [Makefile]
 	* benchmark: force clean

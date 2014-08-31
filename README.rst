@@ -57,13 +57,29 @@ with same ``prefix``, use ``uninstall`` target.
 Usage
 =====
 
+.. code:: sh
+
+  $ e [OPTIONS] [--] [expression]
+
+``-h``:
+  display help message
+
+``-V``:
+  display version string
+
+``-d``:
+  display debugging messages
+
+``-v varname`` (loadable only):
+  store result to variable ``varname``
+
 Loadable
 --------
 
 .. code:: sh
 
   $ enable -f /path/to/e.bash e
-  $ e -v VARNAME [expression]
+  $ e [expression]
 
 The result will be stored (Variable Binding) to ``$VARNAME``, of course, you
 can use with Command Substitution:
@@ -243,13 +259,13 @@ Sample result:
 +-----------------+--------+
 | method          | runs   |
 +=================+========+
-| original ``e``  | 554    |
+| original ``e``  | 567    |
 +-----------------+--------+
-| ``e``           | 596    |
+| ``e``           | 511    |
 +-----------------+--------+
-| loadable        | 1,125  |
+| loadable        | 1,058  |
 +-----------------+--------+
-| loadable ``-v`` | 12,921 |
+| loadable ``-v`` | 12,659 |
 +-----------------+--------+
 
 Examples
