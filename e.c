@@ -310,8 +310,6 @@ function ()
 type
 term ()
 {
-  const int m = 1;
-
   if (c == '(' || c == '[') {
     type r;
 
@@ -321,11 +319,11 @@ term ()
       syntax();
 
     next();
-    return m * r;
+    return r;
   } else if ((c >= '0' && c <= '9') || c == '.')
-    return m * constant();
+    return constant();
   else if (c >= 'a' && c <= 'z')
-    return m * function();
+    return function();
 
   return 0;
 }
