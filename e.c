@@ -193,7 +193,7 @@ constant ()
     next();
 
     while (c >= '0' && c <= '9') {
-      r += p * (c-'0');
+      r += p * (c - '0');
       p /= 10;
       next();
     }
@@ -243,28 +243,28 @@ function ()
             return r;                     \
           } while (false);                \
 
-  if (!strcmp(f,"pi"))
+  if (!strcmp(f, "pi"))
     RETURN(M_PI);
-  if (!strcmp(f,"e" ))
+  if (!strcmp(f, "e" ))
     RETURN(M_E);
 
   if (!strcmp(f, "dblmax"))
     RETURN((type) DBL_MAX);
   if (!strcmp(f, "dblmin"))
     RETURN((type) DBL_MIN);
-  if (!strcmp(f,"randmax"))
+  if (!strcmp(f, "randmax"))
     RETURN((type) RAND_MAX);
 
   v = term();
 
   #define mathfunc(a,b)                         \
-          if(!strcmp(f,a)) {                    \
+          if (!strcmp(f, a)) {                  \
             DEBUG_SYNTAX(dp);                   \
             DPRINT_("%s(%f) = %f\n", f, v, b);  \
             return b;                           \
           }
   #define mathfret(a,b,r)                             \
-          if(!strcmp(f,a)) {                          \
+          if (!strcmp(f, a)) {                        \
             DEBUG_SYNTAX(dp);                         \
             DPRINT_("void %s(%f) = %f\n", f, v, r);   \
             b;                                        \
