@@ -18,6 +18,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#include <float.h>
 #ifndef BASH_LOADABLE
 #include <getopt.h>
 #endif
@@ -213,6 +214,10 @@ function ()
   if (!strcmp(f,"e" ))
     return M_E;
 
+  if (!strcmp(f, "dblmax"))
+    return DBL_MAX;
+  if (!strcmp(f, "dblmin"))
+    return DBL_MIN;
   if (!strcmp(f,"randmax"))
     return RAND_MAX;
 
