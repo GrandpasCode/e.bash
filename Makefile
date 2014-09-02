@@ -34,11 +34,11 @@ LDFLAGS = -lm
 
 # when with check target:
 # - treat warnings as error for e and e.bash
-# - set benchmark DURATION = 1
+# - set benchmark DURATION = .1
 BENCHMARK_DURATION = 5
 ifneq ($(filter check,$(MAKECMDGOALS)),)
 CFLAGS += -Werror
-BENCHMARK_DURATION = 1
+BENCHMARK_DURATION = .1
 endif
 
 .PHONY: all

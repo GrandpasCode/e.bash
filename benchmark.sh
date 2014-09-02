@@ -52,7 +52,7 @@ test_command () {
     exit 1
   fi
 
-  RUNS=$(($(wc -l < "$tmpcount") / $DURATION))
+  RUNS=$(bc <<< "$(wc -l < "$tmpcount") / $DURATION")
   printf "\e[3K\e[0G\e[1;34m%'7.0f\e[0m runs per second via %s\n" "$RUNS" "$VIA"
   rm "$tmpcount"
 

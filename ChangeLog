@@ -1,3 +1,10 @@
+2014-09-03  Yu-Jie Lin  <livibetter@gmail.com>
+[Makefile]
+	* check: reduce BENCHMARK_DURATION to 0.1 seconds
+
+[benchmark.sh]
+	* DURATION: bring back bc to calculate RUNS/second
+
 2014-09-01  Yu-Jie Lin  <livibetter@gmail.com>
 [Makefile]
 	* benchmark, check: benchmark is run and depended by check, with
