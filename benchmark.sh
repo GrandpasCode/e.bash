@@ -16,14 +16,18 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 : ${DURATION:=5}
-TEST='sin[pi/2]'
-EXPECT=1
+: ${TEST:=sin[pi/2]}
+: ${EXPECT:=1}
+: ${VARNAME=RESULT}
 
 trap 'kill $tmpcount_pid ; rm "$tmpcount" ; exit 130' INT
 
 test_command () {
 
   local RESULT
+  local VIA="$1"
+  local TD="$2"
+  local SETUP="$3"
 
   echo -ne "\e[1;37mBenchmarking\e[0m "
   [[ ! -z "${SETUP[@]}" ]] && echo -ne "\e[1;32m${SETUP[@]/$PWD/\$PWD}\e[0m; "
@@ -33,14 +37,9 @@ test_command () {
   tmpcount="$(mktemp)"
   (
     trap exit TERM
-    "${SETUP[@]}"
-    while :; do
-      if [[ -z $VARNAME ]]; then
-        RESULT="$(${TD[@]})"
-      else
-        ${TD[@]}
-        RESULT="${!VARNAME}"
-      fi
+    eval "$SETUP"
+    while RESULT=; do
+      "$TD"
       [[ $RESULT == $EXPECT ]] && echo >> "$tmpcount"
     done
   ) &>/dev/null &
@@ -62,30 +61,30 @@ test_command () {
   fi
 }
 
-SETUP=()
-VIA='original e program'
-TD=(e-0.02718/e "$TEST")
-VARNAME=
+test_e2718 () {
+  RESULT="$(e-0.02718/e $TEST)"
+}
 
-test_command
+test_command 'original e program' test_e2718
 
-SETUP=()
-VIA='e program'
-TD=(./e "$TEST")
-VARNAME=
+test_e_command () {
+  RESULT="$(./e $TEST)"
+}
 
-test_command
+test_command 'e program' test_e_command
 
-SETUP=('enable' '-f' "$PWD/e.bash" 'e')
-VIA='Bash loadable with Command Substitution'
-TD=(e "$TEST")
-VARNAME=
+test_e_loadable () {
+  RESULT="$(e $TEST)"
+}
 
-test_command
+test_command 'Bash loadable with Command Substitution' \
+             test_e_loadable \
+             'enable -f $PWD/e.bash e'
 
-SETUP=('enable' '-f' "$PWD/e.bash" 'e')
-VIA='Bash loadable with Variable Binding'
-VARNAME=BLAH
-TD=(e -v "$VARNAME" "$TEST")
+test_e_loadable_v () {
+  e -v RESULT $TEST
+}
 
-test_command
+test_command 'Bash loadable with Variable Binding' \
+             test_e_loadable_v \
+             'enable -f $PWD/e.bash e'

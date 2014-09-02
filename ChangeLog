@@ -3,7 +3,12 @@
 	* check: reduce BENCHMARK_DURATION to 0.1 seconds
 
 [benchmark.sh]
+	* remove: VARNAME
 	* DURATION: bring back bc to calculate RUNS/second
+	* TEST, EXPECT: can be set via environment variables
+	* test_command: use parameters, VIA is $1, TD is $2, SETUP is $3
+	* test_command: use eval to run SETUP, now $3, no longer an array,
+	* test_command: TD is function name, now $2, native  function to run test
 
 2014-09-01  Yu-Jie Lin  <livibetter@gmail.com>
 [Makefile]
