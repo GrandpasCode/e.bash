@@ -61,6 +61,10 @@ test_command () {
   fi
 }
 
+#########
+# basic #
+#########
+
 test_e2718 () {
   RESULT="$(e-0.02718/e $TEST)"
 }
@@ -88,3 +92,36 @@ test_e_loadable_v () {
 test_command 'Bash loadable with Variable Binding' \
              test_e_loadable_v \
              'enable -f $PWD/e.bash e'
+
+#########
+# 1 + 1 #
+#########
+
+EXPECT=2
+
+test_bash_1plus1_ap () {
+  RESULT="$((1 + 1))"
+}
+
+test_command 'Bash 1 + 1 Arithmetic Expansion' test_bash_1plus1_ap
+
+test_bash_1plus1_ae () {
+  ((RESULT=1+1))
+}
+
+test_command 'Bash 1 + 1 Arithmetic Evaluation' test_bash_1plus1_ae
+
+test_bash_1plus1_let () {
+  let RESULT=1+1
+}
+
+test_command 'Bash 1 + 1 let' test_bash_1plus1_let
+
+test_e_loadable_v_1plus1 () {
+  e -v RESULT 1 + 1
+}
+
+test_command 'Bash loadable with Variable Binding, 1 + 1' \
+             test_e_loadable_v_1plus1 \
+             'enable -f $PWD/e.bash e'
+

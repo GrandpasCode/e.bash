@@ -4,6 +4,8 @@
 
 [benchmark.sh]
 	* remove: VARNAME
+	* test: 1 + 1 on Bash Arithmetic Expansion and Evaluation, let, and
+	  loadable
 	* DURATION: bring back bc to calculate RUNS/second
 	* TEST, EXPECT: can be set via environment variables
 	* test_command: use parameters, VIA is $1, TD is $2, SETUP is $3
