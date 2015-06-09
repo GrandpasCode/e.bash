@@ -1,6 +1,6 @@
 /*
  * a tiny expression evaluator
- * Copyright (C) 2014  Yu-Jie Lin
+ * Copyright (C) 2014-2015  Yu-Jie Lin
  * Copyright (C) 2001  Dimitromanolakis Apostolos
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -270,6 +270,8 @@ function ()
             b;                                        \
             return r;                                 \
           }
+
+  mathfunc("sign"  , (v == 0) ? 0.0 : (v > 0) ? 1.0 : -1.0);
 
   mathfunc("abs"   , fabs(v));
   mathfunc("fabs"  , fabs(v));

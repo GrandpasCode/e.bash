@@ -137,6 +137,16 @@ TEST  1 round[ 0.5]
 SKIP_E2718=1
 TEST -1 round[-0.5]
 
+# sign
+######
+
+SKIP_E2718=1
+TEST  0 sign[ 0]
+SKIP_E2718=1
+TEST  1 sign[ 1]
+SKIP_E2718=1
+TEST -1 sign[-1]
+
 # trunc
 #######
 
