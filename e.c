@@ -65,7 +65,7 @@ char *e_doc[] = {
 };
 
 #define COPYRIGHT \
-        "Copyright (C) 2014 Authors of e.bash\n"\
+        "Copyright (C) 2014-2015 Authors of e.bash\n"\
         "License GPLv2+: GNU GPL version 2 or later <https://www.gnu.org/licenses/gpl-2.0.html>\n"\
         "This is free software: you are free to change and redistribute it.\n"\
         "There is NO WARRANTY, to the extent permitted by law."

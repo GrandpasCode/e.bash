@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014  Yu-Jie Lin
+ * Copyright (C) 2015  Yu-Jie Lin
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -16,4 +16,4 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#define VERSION "0.3.0"
+#define VERSION "0.4.0"
